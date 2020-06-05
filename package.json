@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/piyushdhamecha/react-recoil-to-do-app#readme",
   "dependencies": {
+    "@material-ui/core": "^4.10.1",
     "core-js": "^3.6.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
