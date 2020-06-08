@@ -23,5 +23,6 @@ module.exports = {
         extensions: ['.js', '.jsx'],
       },
     ],
+    'import/prefer-default-export': [0]
   },
 };

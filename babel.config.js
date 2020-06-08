@@ -1,5 +1,5 @@
 const presets = [
-  ["@babel/preset-env", { // Pass a config object to the preset
+  ['@babel/preset-env', { // Pass a config object to the preset
     debug: true, // Output the targets/plugins used when compiling
 
     // NEW CODE:
@@ -20,7 +20,7 @@ const presets = [
   }],
 ];
 
-const plugins = [];
+const plugins = ['babel-plugin-styled-components'];
 
 // Export a config object.
 module.exports = { presets, plugins };

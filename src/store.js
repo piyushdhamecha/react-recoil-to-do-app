@@ -1,6 +1,18 @@
-import { atom } from 'recoil'
+import { atom, selector } from 'recoil';
 
-const textState = atom({
+import sortBy from 'lodash/sortBy';
+
+export const todoList = atom({
   key: 'todoList',
   default: [],
+});
+
+export const lastIndex = atom({
+  key: 'lastIndex',
+  default: 0,
+});
+
+export const sortedTodoList = selector({
+  key: 'sortedTodoList',
+  get: ({ get }) => sortBy(get(todoList), ['key']),
 });

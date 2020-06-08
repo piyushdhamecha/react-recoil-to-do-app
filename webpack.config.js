@@ -13,8 +13,8 @@ const PATH_DIST = path.join(__dirname, './dist');
 // `webpack --env.production` sets env.production = true
 // `webpack --env.a = b` sets env.a = 'b'
 // https://webpack.js.org/configuration/configuration-types#exporting-a-function
-module.exports = env => {
-  const environment = env.environment;
+module.exports = (env) => {
+  const { environment } = env;
   const isProduction = environment === 'production';
   const isDevelopment = environment === 'development';
 
@@ -38,7 +38,7 @@ module.exports = env => {
       host: 'localhost',
 
       // Specify a port number on which to listen for requests.
-      port: 8080,
+      port: 8081,
 
       // When using the HTML5 History API (you'll probably do this with React
       // later), index.html should be served in place of 404 responses.
@@ -102,8 +102,8 @@ module.exports = env => {
                 '@babel/preset-react',
               ],
             },
-          }
-        }
+          },
+        },
       ],
     },
     // NEW CODE:
