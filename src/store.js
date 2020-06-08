@@ -1,6 +1,6 @@
 import { atom, selector } from 'recoil';
 
-import sortBy from 'lodash/sortBy';
+import orderBy from 'lodash/orderBy';
 
 export const todoList = atom({
   key: 'todoList',
@@ -14,5 +14,5 @@ export const lastIndex = atom({
 
 export const sortedTodoList = selector({
   key: 'sortedTodoList',
-  get: ({ get }) => sortBy(get(todoList), ['key']),
+  get: ({ get }) => orderBy(get(todoList), ['checked', 'key'], ['asc', 'desc']),
 });
