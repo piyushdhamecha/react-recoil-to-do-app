@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  useRecoilState, useRecoilValue, useSetRecoilState, useRecoilCallback,
+} from 'recoil';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Add from '@material-ui/icons/Add';
@@ -17,7 +19,9 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { todoList, lastIndex, sortedTodoList } from '../store';
+import {
+  todoList, lastIndex, sortedTodoList,
+} from '../store';
 
 import { StyledPageContainer } from './ToDoContainerStyled';
 
@@ -40,8 +44,17 @@ const ToDoContainer = () => {
   const classes = useStyles();
   const [inputText, setInputText] = useState('');
   const [index, setIndex] = useRecoilState(lastIndex);
-  const setList = useSetRecoilState(todoList);
+  const setList = useSetRecoilState(todoList(index));
   const sortedList = useRecoilValue(sortedTodoList);
+  console.log({ sortedList });
+
+  const updateRecord = useRecoilCallback(({ set }, record) => {
+    set(todoList(record.key), record);
+  });
+
+  const handleCheckboxClick = () => {
+    updateRecord();
+  };
 
   const renderListItems = () => {
     if (!sortedList || sortedList.length === 0) {
@@ -62,6 +75,7 @@ const ToDoContainer = () => {
               tabIndex={-1}
               disableRipple
               inputProps={{ 'aria-labelledby': key }}
+              onClick={() => handleCheckboxClick(key)}
             />
           </ListItemIcon>
           <ListItemText id={key} primary={name} />
@@ -77,10 +91,9 @@ const ToDoContainer = () => {
   };
 
   const handleAddItem = () => {
-    setList((oldList) => [
-      ...oldList,
-      { checked: false, key: index, name: inputText },
-    ]);
+    setList({
+      checked: false, key: index, name: inputText, isDeleted: false,
+    });
     setIndex(index + 1);
     setInputText('');
   };
