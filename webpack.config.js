@@ -34,12 +34,6 @@ module.exports = (env) => {
       // The dev server will serve content from this directory.
       contentBase: PATH_DIST,
 
-      // Specify a host. (Defaults to 'localhost'.)
-      host: 'localhost',
-
-      // Specify a port number on which to listen for requests.
-      port: 8081,
-
       // When using the HTML5 History API (you'll probably do this with React
       // later), index.html should be served in place of 404 responses.
       historyApiFallback: true,
