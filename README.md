@@ -1,4 +1,7 @@
 # React recoil Todo app
-Created Todo app using react recoil library
 
-https://github.com/facebookexperimental/Recoil
+Todo app using react recoil state management library
+
+Live demo and hands on: https://codesandbox.io/s/serene-chebyshev-jqygd
+
+Ref: https://github.com/facebookexperimental/Recoil
