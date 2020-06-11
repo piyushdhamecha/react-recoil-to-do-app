@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --env.environment=production --config webpack.config.js",
-    "dev": "webpack --env.environment=development --config webpack.config.js",
-    "start": "webpack-dev-server --env.environment=development --config webpack.config.js",
+    "dev": "webpack --env.environment=development --config webpack.config.js ",
+    "start": "webpack-dev-server --env.environment=development --config webpack.config.js --port 80",
     "lint:css": "stylelint './src/**/*Styled.js'"
   },
   "repository": {
