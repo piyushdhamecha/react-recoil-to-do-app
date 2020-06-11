@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import {
-  useRecoilState, useRecoilValue, useSetRecoilState, useRecoilCallback,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+  useRecoilCallback,
 } from 'recoil';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,7 +23,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import {
-  todoList, lastIndex, sortedTodoList,
+  todoList, lastIndex, filteredTodoList,
 } from '../store';
 
 import { StyledPageContainer } from './ToDoContainerStyled';
@@ -44,20 +47,19 @@ const ToDoContainer = () => {
   const classes = useStyles();
   const [inputText, setInputText] = useState('');
   const [index, setIndex] = useRecoilState(lastIndex);
+  const filteredList = useRecoilValue(filteredTodoList);
   const setList = useSetRecoilState(todoList(index));
-  const sortedList = useRecoilValue(sortedTodoList);
-  console.log({ sortedList });
 
-  const updateRecord = useRecoilCallback(({ set }, record) => {
-    set(todoList(record.key), record);
+  const toggleCheckRecord = useRecoilCallback(({ set }, key) => {
+    set(todoList(key), (prevItem) => ({ ...prevItem, checked: !prevItem.checked }));
   });
 
-  const handleCheckboxClick = () => {
-    updateRecord();
-  };
+  const removeRecord = useRecoilCallback(({ set }, key) => {
+    set(todoList(key), (prevItem) => ({ ...prevItem, isDeleted: true }));
+  });
 
   const renderListItems = () => {
-    if (!sortedList || sortedList.length === 0) {
+    if (!filteredList || filteredList.length === 0) {
       return (
         <ListItem key={0}>
           <ListItemText primary="No item found" />
@@ -65,41 +67,63 @@ const ToDoContainer = () => {
       );
     }
 
-    return sortedList.map(({ checked, key, name }) => (
-      <>
-        <ListItem key={key}>
-          <ListItemIcon>
-            <Checkbox
-              edge="start"
-              checked={checked}
-              tabIndex={-1}
-              disableRipple
-              inputProps={{ 'aria-labelledby': key }}
-              onClick={() => handleCheckboxClick(key)}
+    return filteredList.map(({ checked, key, name }) => {
+      const nameStyle = {
+        textDecoration: checked ? 'line-through' : 'none',
+        fontStyle: checked ? 'italic' : 'none',
+      };
+
+      return (
+        <>
+          <ListItem key={key}>
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{ 'aria-labelledby': key }}
+                onClick={() => toggleCheckRecord(key)}
+              />
+            </ListItemIcon>
+            <ListItemText
+              id={key}
+              primary={name}
+              primaryTypographyProps={{ style: nameStyle }}
             />
-          </ListItemIcon>
-          <ListItemText id={key} primary={name} />
-          <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="comments">
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Divider />
-      </>
-    ));
+            <ListItemSecondaryAction>
+              <IconButton edge="end" aria-label="comments">
+                <DeleteIcon onClick={() => removeRecord(key)} />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+          <Divider />
+        </>
+      );
+    });
   };
 
   const handleAddItem = () => {
-    setList({
-      checked: false, key: index, name: inputText, isDeleted: false,
-    });
-    setIndex(index + 1);
-    setInputText('');
+    if (inputText) {
+      setList({
+        checked: false,
+        key: index,
+        name: inputText,
+        isDeleted: false,
+      });
+      setIndex(index + 1);
+      setInputText('');
+    }
   };
 
   const handleInputChange = (e) => {
     setInputText(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleAddItem();
+    }
   };
 
   return (
@@ -116,6 +140,7 @@ const ToDoContainer = () => {
               inputProps={{ 'aria-label': 'Add an item', width: '100%' }}
               value={inputText}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
             />
             <IconButton className={classes.iconButton} aria-label="add" onClick={handleAddItem}>
               <Add />
